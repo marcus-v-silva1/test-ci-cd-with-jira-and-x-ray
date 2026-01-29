@@ -9,14 +9,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,19 +20,19 @@ jobs:
           bundler-cache: true
 
       - name: Setup DB
-        run: |
-          cp config/database.yml.github-actions config/database.yml
-          bundle exec rails db:create db:schema:load
         env:
           RAILS_ENV: test
+        run: |
+          cp config/database.yml.github-actions config/database.yml
+          bundle exec rails db:create db:migrate
 
       - name: Run tests
+        env:
+          RAILS_ENV: test
         run: |
           bundle exec rspec \
             --format RspecJunitFormatter \
             --out tmp/rspec.xml
-        env:
-          RAILS_ENV: test
 
       - name: Upload test report
         uses: actions/upload-artifact@v4
