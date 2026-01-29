@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  post "/sum", to: "sums#create"
+  post "/sums", to: "sums#create"
 end

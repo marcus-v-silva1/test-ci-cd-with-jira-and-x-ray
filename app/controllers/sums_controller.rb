@@ -3,8 +3,10 @@ class SumsController < ApplicationController
     a = params[:a]
     b = params[:b]
 
-    return render json: { error: "Invalid input" }, status: :bad_request unless a.is_a?(Numeric) && b.is_a?(Numeric)
+    return render json: { error: "invalid params" }, status: :bad_request unless a && b
 
-    render json: { result: a + b }
+    result = a.to_i + b.to_i
+
+    render json: { result: result }, status: :ok
   end
 end
